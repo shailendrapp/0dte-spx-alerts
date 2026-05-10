@@ -1,4 +1,4 @@
-# 0DTE SPX Iron Condor Alerter
+# 0DTE SPX Iron Condor Alerter (This strategy was backtested & has a high win rate)
 
 Periodic Telegram alerts for a defined-risk 0DTE SPX iron condor strategy, deployed via GitHub Actions.
 
