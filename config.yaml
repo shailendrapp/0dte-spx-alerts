@@ -1,0 +1,53 @@
+# 0DTE SPX Iron Condor — Strategy parameters
+# Edit these values; restart of the GitHub Action picks them up automatically.
+
+strategy:
+  # Strike placement: short strikes at +/- (sigma_multiplier * EM) from spot
+  # 1.0 = at the 1-sigma expected move (~16-delta).  Backtest-optimal range: 0.75 - 1.25.
+  sigma_multiplier: 1.0
+
+  # Wing width in SPX index points (defines max risk per contract).
+  # Per-contract max loss = (wing - credit) * 100.  E.g. 25-pt wing, $5 credit -> $2,000 max loss.
+  wing_width: 25
+
+  # ATM straddle multiplier to derive Expected Move.  0.85 is the tastytrade convention.
+  em_multiplier: 0.85
+
+  # Strike grid (SPX trades on $5 increments at most strikes).
+  strike_round: 5
+
+filters:
+  # Skip the day if (1-day implied vol annualized) > this threshold.
+  # 25 (i.e. VIX ~= 25) is the empirical edge of "VRP-collapse" regime.
+  vol_skip_threshold: 25.0
+
+  # Skip the day if absolute overnight gap > this fraction.
+  # 0.0075 = 0.75%.  Above this, mean-reversion assumption breaks.
+  overnight_gap_threshold: 0.0075
+
+  # Skip the day if absolute 5-day return > this fraction.
+  trend_skip_threshold: 0.040
+
+  # Look-back days for realized-vol estimate (Garman-Klass).
+  realized_vol_lookback: 5
+
+intraday:
+  # Trigger 50% profit-target alert when current spread mark <= this fraction of initial credit.
+  pt_fraction: 0.50
+
+  # Trigger heads-up loss alert when spread mark >= this multiple of initial credit (early warning).
+  loss_warning_multiple: 1.50
+
+  # Hard breach of a short strike (intraday touch) -> always alert.
+  alert_on_short_breach: true
+
+times_et:
+  # All times are America/New_York.
+  morning_alert: "09:32"
+  intraday_first: "10:00"
+  intraday_last: "15:55"
+  eod_recap:    "16:05"
+
+# Tolerance (minutes) for the time-window self-check inside each script.
+# GitHub cron jitter can be 5-15 min; this guards against off-window runs.
+time_tolerance_min: 12
