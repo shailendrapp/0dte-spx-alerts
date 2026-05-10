@@ -1,0 +1,46 @@
+name: 0DTE Intraday Monitor (10:00–15:55 ET)
+
+on:
+  schedule:
+    # Every 15 minutes during US market hours.  The script self-checks local ET
+    # time so off-hours runs (and DST overlaps) exit silently.
+    # 14:00–19:59 UTC ≈ 10:00–15:59 ET in DST.
+    - cron: "*/15 14-19 * * 1-5"
+    # 15:00–20:59 UTC ≈ 10:00–15:59 ET in EST.
+    - cron: "*/15 15-20 * * 1-5"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: intraday-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      TRADIER_TOKEN: ${{ secrets.TRADIER_TOKEN }}
+      TRADIER_BASE_URL: ${{ secrets.TRADIER_BASE_URL }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      LOG_LEVEL: INFO
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Run intraday monitor
+        run: python -m src.intraday

@@ -1,0 +1,42 @@
+name: 0DTE EOD Recap (16:05 ET)
+
+on:
+  schedule:
+    - cron: "5 20 * * 1-5"   # 16:05 ET in DST
+    - cron: "5 21 * * 1-5"   # 16:05 ET in EST
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eod-recap
+  cancel-in-progress: false
+
+jobs:
+  recap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TRADIER_TOKEN: ${{ secrets.TRADIER_TOKEN }}
+      TRADIER_BASE_URL: ${{ secrets.TRADIER_BASE_URL }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      LOG_LEVEL: INFO
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Run EOD recap
+        run: python -m src.eod
