@@ -50,4 +50,4 @@ times_et:
 
 # Tolerance (minutes) for the time-window self-check inside each script.
 # GitHub cron jitter can be 5-15 min; this guards against off-window runs.
-time_tolerance_min: 12
+time_tolerance_min: 30
