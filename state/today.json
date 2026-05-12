@@ -1,0 +1,31 @@
+{
+  "date": "2026-05-12",
+  "decision": "TRADE",
+  "skip_reason": null,
+  "trade": {
+    "S0": 7376.66,
+    "EM": 25.585,
+    "Kp": 7350.0,
+    "Lp": 7325.0,
+    "Kc": 7400.0,
+    "Lc": 7425.0,
+    "credit": 7.6,
+    "max_loss_per_contract": 1740.0,
+    "underlying": "SPX",
+    "expiration": "2026-05-12",
+    "leg_symbols": {
+      "Kp": "SPXW260512P07350000",
+      "Lp": "SPXW260512P07325000",
+      "Kc": "SPXW260512C07400000",
+      "Lc": "SPXW260512C07425000"
+    }
+  },
+  "alerts_fired": {
+    "breach_put": false,
+    "breach_call": false,
+    "pt_50": false,
+    "loss_150": false,
+    "eod_recap": false
+  },
+  "intraday_log": []
+}
