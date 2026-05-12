@@ -88,8 +88,16 @@ class TradierClient:
 
     # ------- options -------------------------------------------------------
     def get_option_expirations(self, underlying: str) -> list[str]:
-        """All expirations for an underlying (YYYY-MM-DD strings)."""
-        data = self._get("/v1/markets/options/expirations", {"symbol": underlying})
+        """All expirations for an underlying (YYYY-MM-DD strings).
+
+        IMPORTANT: includeAllRoots=true is required to return SPXW (daily/weekly)
+        expirations.  Without it, Tradier returns only standard SPX (monthly
+        third-Friday AM-settled) -- so the daily 0DTE chain looks empty.
+        """
+        data = self._get("/v1/markets/options/expirations", {
+            "symbol": underlying,
+            "includeAllRoots": "true",
+        })
         ex = (data.get("expirations") or {}).get("date") or []
         if isinstance(ex, str):
             ex = [ex]
@@ -101,8 +109,16 @@ class TradierClient:
         expiration: str,
         greeks: bool = False,
     ) -> list[dict]:
-        """Full option chain for an expiration.  Returns list of contract dicts."""
-        params = {"symbol": underlying, "expiration": expiration, "greeks": str(greeks).lower()}
+        """Full option chain for an expiration.  Returns list of contract dicts.
+
+        includeAllRoots=true so SPXW (PM-settled, daily) contracts are included.
+        """
+        params = {
+            "symbol": underlying,
+            "expiration": expiration,
+            "greeks": str(greeks).lower(),
+            "includeAllRoots": "true",
+        }
         data = self._get("/v1/markets/options/chains", params)
         opts = (data.get("options") or {}).get("option") or []
         if isinstance(opts, dict):
