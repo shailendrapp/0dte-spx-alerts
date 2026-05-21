@@ -16,13 +16,27 @@ strategy:
   # Strike grid (SPX trades on $5 increments at most strikes).
   strike_round: 5
 
+  # ── GEX wall anchor (NEW) ─────────────────────────────────────────────────
+  # When the default short strike is more than wall_gap_buffer points away
+  # from the nearest GEX wall, the strike is widened toward the wall so it
+  # lands at (wall - min_wall_gap).
+  #
+  # Example (today, May 20):
+  #   Default Kc = 7,405.  Call wall = 7,500.  Gap = 95 pts.
+  #   wall_gap_buffer = 80 → gap (95) > buffer → adjustment fires.
+  #   Kc snapped to 7,500 - 40 = 7,460.
+  #   SPX hit 7,417 → still inside win zone → WIN instead of LOSS.
+  #
+  # Set wall_gap_buffer: 0 to disable the GEX adjustment entirely
+  # (falls back to pure sigma_multiplier behaviour).
+  wall_gap_buffer: 80   # pts; if gap between default Kc and call wall > this, adjust
+  min_wall_gap:    40   # pts; how far inside the wall Kc/Kp lands after adjustment
+
 filters:
   # Skip the day if (1-day implied vol annualized) > this threshold.
-  # 25 (i.e. VIX ~= 25) is the empirical edge of "VRP-collapse" regime.
   vol_skip_threshold: 25.0
 
   # Skip the day if absolute overnight gap > this fraction.
-  # 0.0075 = 0.75%.  Above this, mean-reversion assumption breaks.
   overnight_gap_threshold: 0.0075
 
   # Skip the day if absolute 5-day return > this fraction.
@@ -32,22 +46,20 @@ filters:
   realized_vol_lookback: 5
 
 intraday:
-  # Trigger 50% profit-target alert when current spread mark <= this fraction of initial credit.
+  # Trigger 50% profit-target alert when spread mark <= this fraction of initial credit.
   pt_fraction: 0.50
 
-  # Trigger heads-up loss alert when spread mark >= this multiple of initial credit (early warning).
+  # Trigger heads-up loss alert when spread mark >= this multiple of initial credit.
   loss_warning_multiple: 1.50
 
-  # Hard breach of a short strike (intraday touch) -> always alert.
+  # Hard breach of a short strike -> always alert.
   alert_on_short_breach: true
 
 times_et:
-  # All times are America/New_York.
   morning_alert: "09:32"
   intraday_first: "10:00"
   intraday_last: "15:55"
   eod_recap:    "16:05"
 
 # Tolerance (minutes) for the time-window self-check inside each script.
-# GitHub cron jitter can be 5-15 min; this guards against off-window runs.
 time_tolerance_min: 30
