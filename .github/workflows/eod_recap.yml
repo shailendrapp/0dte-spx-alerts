@@ -1,9 +1,12 @@
 name: 0DTE EOD Recap (16:05 ET)
 
+# FIX: was two crons (5 20 and 5 21) causing duplicate runs every day
+# during DST (both fire, 60 min apart). Now single cron at 20:10 UTC
+# (16:10 EDT) with +5 min buffer for GitHub Actions queue jitter.
+# When EST resumes (Nov), change to: "10 21 * * 1-5"
 on:
   schedule:
-    - cron: "5 20 * * 1-5"   # 16:05 ET in DST
-    - cron: "5 21 * * 1-5"   # 16:05 ET in EST
+    - cron: "10 20 * * 1-5"   # 16:10 ET during EDT (UTC-4) — DST active now
   workflow_dispatch: {}
 
 permissions:
@@ -18,11 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      TRADIER_TOKEN: ${{ secrets.TRADIER_TOKEN }}
-      TRADIER_BASE_URL: ${{ secrets.TRADIER_BASE_URL }}
+      TRADIER_TOKEN:      ${{ secrets.TRADIER_TOKEN }}
+      TRADIER_BASE_URL:   ${{ secrets.TRADIER_BASE_URL }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      LOG_LEVEL: INFO
+      TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+      LOG_LEVEL:          INFO
 
     steps:
       - uses: actions/checkout@v4
