@@ -1,53 +1,35 @@
 {
-  "date": "2026-05-28",
+  "date": "2026-05-29",
   "decision": "TRADE",
   "skip_reason": null,
   "trade": {
-    "S0": 7512.97,
-    "EM": 23.97,
-    "Kp": 7490.0,
-    "Lp": 7465.0,
-    "Kc": 7535.0,
-    "Lc": 7560.0,
-    "credit": 7.85,
-    "max_loss_per_contract": 1715.0,
+    "S0": 7579.28,
+    "EM": 24.4375,
+    "Kp": 7555.0,
+    "Lp": 7530.0,
+    "Kc": 7605.0,
+    "Lc": 7630.0,
+    "credit": 7.22,
+    "max_loss_per_contract": 1777.0,
     "underlying": "SPX",
-    "expiration": "2026-05-28",
+    "expiration": "2026-05-29",
     "call_wall": null,
     "put_wall": null,
     "kc_adjusted": false,
     "kp_adjusted": false,
     "leg_symbols": {
-      "Kp": "SPXW260528P07490000",
-      "Lp": "SPXW260528P07465000",
-      "Kc": "SPXW260528C07535000",
-      "Lc": "SPXW260528C07560000"
+      "Kp": "SPXW260529P07555000",
+      "Lp": "SPXW260529P07530000",
+      "Kc": "SPXW260529C07605000",
+      "Lc": "SPXW260529C07630000"
     }
   },
   "alerts_fired": {
     "breach_put": false,
-    "breach_call": true,
+    "breach_call": false,
     "pt_50": false,
-    "loss_150": true,
-    "eod_recap": true
+    "loss_150": false,
+    "eod_recap": false
   },
-  "intraday_log": [
-    {
-      "time": "13:31",
-      "spot": 7561.35,
-      "mark": 21.2,
-      "leg_mids": {
-        "Kp": 0.175,
-        "Lp": 0.125,
-        "Kc": 27.0,
-        "Lc": 5.85
-      }
-    }
-  ],
-  "result": {
-    "spx_close": 7563.63,
-    "settlement_pts": 25.0,
-    "pnl_pts": -17.15,
-    "pnl_dollars": -1720.2
-  }
+  "intraday_log": []
 }
