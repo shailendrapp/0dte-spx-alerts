@@ -27,7 +27,7 @@
   "alerts_fired": {
     "breach_put": false,
     "breach_call": true,
-    "pt_50": false,
+    "pt_50": true,
     "loss_150": true,
     "eod_recap": false
   },
@@ -41,6 +41,17 @@
         "Lp": 0.075,
         "Kc": 12.6,
         "Lc": 0.375
+      }
+    },
+    {
+      "time": "15:53",
+      "spot": 7600.48,
+      "mark": 2.08,
+      "leg_mids": {
+        "Kp": 0.04,
+        "Lp": 0.03,
+        "Kc": 2.1,
+        "Lc": 0.03
       }
     }
   ]
