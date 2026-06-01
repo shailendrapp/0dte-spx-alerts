@@ -29,7 +29,7 @@
     "breach_call": true,
     "pt_50": true,
     "loss_150": true,
-    "eod_recap": false
+    "eod_recap": true
   },
   "intraday_log": [
     {
@@ -54,5 +54,11 @@
         "Lc": 0.03
       }
     }
-  ]
+  ],
+  "result": {
+    "spx_close": 7599.96,
+    "settlement_pts": 0.0,
+    "pnl_pts": 8.12,
+    "pnl_dollars": 806.8
+  }
 }
