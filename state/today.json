@@ -1,14 +1,14 @@
 {
-  "date": "2026-06-08",
+  "date": "2026-06-09",
   "decision": "SKIP",
-  "skip_reason": "overnight gap +0.84% (|gap| > 0.75%)",
+  "skip_reason": "overnight gap +0.76% (|gap| > 0.75%)",
   "trade": null,
   "alerts_fired": {
     "breach_put": false,
     "breach_call": false,
     "pt_50": false,
     "loss_150": false,
-    "eod_recap": true
+    "eod_recap": false
   },
   "intraday_log": []
 }
