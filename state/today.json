@@ -27,9 +27,21 @@
   "alerts_fired": {
     "breach_put": false,
     "breach_call": false,
-    "pt_50": false,
+    "pt_50": true,
     "loss_150": false,
     "eod_recap": false
   },
-  "intraday_log": []
+  "intraday_log": [
+    {
+      "time": "14:29",
+      "spot": 7424.93,
+      "mark": 2.525,
+      "leg_mids": {
+        "Kp": 0.325,
+        "Lp": 0.225,
+        "Kc": 3.25,
+        "Lc": 0.825
+      }
+    }
+  ]
 }
