@@ -8,7 +8,7 @@
     "breach_call": false,
     "pt_50": false,
     "loss_150": false,
-    "eod_recap": false
+    "eod_recap": true
   },
   "intraday_log": []
 }
