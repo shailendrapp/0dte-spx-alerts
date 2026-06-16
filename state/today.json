@@ -1,14 +1,35 @@
 {
-  "date": "2026-06-15",
-  "decision": "SKIP",
-  "skip_reason": "vol regime (25.3 > 25.0)",
-  "trade": null,
+  "date": "2026-06-16",
+  "decision": "TRADE",
+  "skip_reason": null,
+  "trade": {
+    "S0": 7556.49,
+    "EM": 26.0525,
+    "Kp": 7530.0,
+    "Lp": 7505.0,
+    "Kc": 7585.0,
+    "Lc": 7610.0,
+    "credit": 6.73,
+    "max_loss_per_contract": 1827.0,
+    "underlying": "SPX",
+    "expiration": "2026-06-16",
+    "call_wall": null,
+    "put_wall": null,
+    "kc_adjusted": false,
+    "kp_adjusted": false,
+    "leg_symbols": {
+      "Kp": "SPXW260616P07530000",
+      "Lp": "SPXW260616P07505000",
+      "Kc": "SPXW260616C07585000",
+      "Lc": "SPXW260616C07610000"
+    }
+  },
   "alerts_fired": {
     "breach_put": false,
     "breach_call": false,
     "pt_50": false,
     "loss_150": false,
-    "eod_recap": true
+    "eod_recap": false
   },
   "intraday_log": []
 }
