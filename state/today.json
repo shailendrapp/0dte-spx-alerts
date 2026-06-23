@@ -1,53 +1,14 @@
 {
-  "date": "2026-06-22",
-  "decision": "TRADE",
-  "skip_reason": null,
-  "trade": {
-    "S0": 7517.01,
-    "EM": 27.455,
-    "Kp": 7490.0,
-    "Lp": 7465.0,
-    "Kc": 7545.0,
-    "Lc": 7570.0,
-    "credit": 7.22,
-    "max_loss_per_contract": 1777.0,
-    "underlying": "SPX",
-    "expiration": "2026-06-22",
-    "call_wall": null,
-    "put_wall": null,
-    "kc_adjusted": false,
-    "kp_adjusted": false,
-    "leg_symbols": {
-      "Kp": "SPXW260622P07490000",
-      "Lp": "SPXW260622P07465000",
-      "Kc": "SPXW260622C07545000",
-      "Lc": "SPXW260622C07570000"
-    }
-  },
+  "date": "2026-06-23",
+  "decision": "SKIP",
+  "skip_reason": "overnight gap -1.12% (|gap| > 0.75%)",
+  "trade": null,
   "alerts_fired": {
-    "breach_put": true,
+    "breach_put": false,
     "breach_call": false,
     "pt_50": false,
-    "loss_150": true,
-    "eod_recap": true
+    "loss_150": false,
+    "eod_recap": false
   },
-  "intraday_log": [
-    {
-      "time": "14:08",
-      "spot": 7477.03,
-      "mark": 11.675,
-      "leg_mids": {
-        "Kp": 13.95,
-        "Lp": 2.275,
-        "Kc": 0.075,
-        "Lc": 0.075
-      }
-    }
-  ],
-  "result": {
-    "spx_close": 7472.79,
-    "settlement_pts": 17.21,
-    "pnl_pts": -9.99,
-    "pnl_dollars": -1004.2
-  }
+  "intraday_log": []
 }
