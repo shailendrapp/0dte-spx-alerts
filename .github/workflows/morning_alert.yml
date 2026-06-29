@@ -1,30 +1,22 @@
-name: 0DTE Morning Alert (09:32 ET)
+name: DEBUG — 0DTE Morning Alert
 
 on:
-  schedule:
-    # GitHub cron is UTC.  09:32 ET = 13:32 UTC (DST, Mar–Nov) or 14:32 UTC (EST, Nov–Mar).
-    # Both schedules run; the script self-checks the local ET time and exits if outside ±12 min.
-    - cron: "32 13 * * 1-5"   # 09:32 ET in DST
-    - cron: "32 14 * * 1-5"   # 09:32 ET in EST
-  workflow_dispatch: {}        # allow manual trigger from the Actions tab
+  workflow_dispatch: {}   # manual trigger only
 
 permissions:
-  contents: write              # so the workflow can commit state/today.json
-
-concurrency:
-  group: morning-alert
-  cancel-in-progress: false
+  contents: write
 
 jobs:
-  alert:
+  debug:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      TRADIER_TOKEN: ${{ secrets.TRADIER_TOKEN }}
-      TRADIER_BASE_URL: ${{ secrets.TRADIER_BASE_URL }}
+      TRADIER_TOKEN:      ${{ secrets.TRADIER_TOKEN }}
+      TRADIER_BASE_URL:   ${{ secrets.TRADIER_BASE_URL }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      LOG_LEVEL: INFO
+      TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+      FLASHALPHA_API_KEY: ${{ secrets.FLASHALPHA_API_KEY }}
+      LOG_LEVEL: DEBUG
 
     steps:
       - uses: actions/checkout@v4
@@ -40,5 +32,67 @@ jobs:
       - name: Install deps
         run: pip install -r requirements.txt
 
-      - name: Run morning alert
+      # ── Step 1: Confirm secrets are injected ──────────────────────────────
+      - name: Inspect env vars
+        run: |
+          echo "=== ENV VAR DIAGNOSTICS ==="
+          echo "TRADIER_BASE_URL      : '$TRADIER_BASE_URL'"
+          echo "TRADIER_TOKEN length  : ${#TRADIER_TOKEN}"
+          echo "TRADIER_TOKEN prefix  : ${TRADIER_TOKEN:0:8}"
+          echo "TELEGRAM_BOT_TOKEN len: ${#TELEGRAM_BOT_TOKEN}"
+          echo "TELEGRAM_CHAT_ID      : '$TELEGRAM_CHAT_ID'"
+          echo "FLASHALPHA_API_KEY len: ${#FLASHALPHA_API_KEY}"
+          echo ""
+          if [ -z "$TRADIER_TOKEN" ]; then
+            echo "❌ TRADIER_TOKEN is EMPTY — secret not set or wrong name"
+          else
+            echo "✅ TRADIER_TOKEN is present"
+          fi
+          if [ -z "$TRADIER_BASE_URL" ]; then
+            echo "❌ TRADIER_BASE_URL is EMPTY — secret not set or wrong name"
+          else
+            echo "✅ TRADIER_BASE_URL is present"
+          fi
+
+      # ── Step 2: Hit Tradier directly with curl ────────────────────────────
+      # This bypasses Python entirely — confirms token+URL are the issue
+      - name: Test Tradier auth (curl)
+        run: |
+          echo "=== CURL TEST: $TRADIER_BASE_URL/v1/markets/clock ==="
+          HTTP_STATUS=$(curl -s -o /tmp/tradier_resp.json -w "%{http_code}" \
+            -H "Authorization: Bearer $TRADIER_TOKEN" \
+            -H "Accept: application/json" \
+            "$TRADIER_BASE_URL/v1/markets/clock")
+          echo "HTTP Status: $HTTP_STATUS"
+          echo "Response body:"
+          cat /tmp/tradier_resp.json
+          echo ""
+          if [ "$HTTP_STATUS" = "200" ]; then
+            echo "✅ Tradier auth SUCCESS"
+          elif [ "$HTTP_STATUS" = "401" ]; then
+            echo "❌ Tradier auth FAILED (401) — token/URL mismatch or token not approved"
+            echo "   → Check that TRADIER_BASE_URL matches your token environment:"
+            echo "     Sandbox token  → https://sandbox.tradier.com"
+            echo "     Live token     → https://api.tradier.com"
+          else
+            echo "⚠️  Unexpected HTTP status: $HTTP_STATUS"
+          fi
+
+      # ── Step 3: Test Tradier quotes endpoint ──────────────────────────────
+      - name: Test Tradier quotes (curl)
+        run: |
+          echo "=== CURL TEST: $TRADIER_BASE_URL/v1/markets/quotes?symbols=SPX ==="
+          HTTP_STATUS=$(curl -s -o /tmp/tradier_quotes.json -w "%{http_code}" \
+            -H "Authorization: Bearer $TRADIER_TOKEN" \
+            -H "Accept: application/json" \
+            "$TRADIER_BASE_URL/v1/markets/quotes?symbols=SPX")
+          echo "HTTP Status: $HTTP_STATUS"
+          echo "Response body:"
+          cat /tmp/tradier_quotes.json
+
+      # ── Step 4: Run the actual morning script (DRY_RUN=true) ─────────────
+      - name: Run morning alert (dry run)
+        env:
+          DRY_RUN: "true"
+          TZ: America/New_York
         run: python -m src.morning
