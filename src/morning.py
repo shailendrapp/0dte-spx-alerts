@@ -54,7 +54,7 @@ def _fetch_gex_walls(api_key: str) -> tuple[float | None, float | None]:
     if not api_key:
         log.info("FLASHALPHA_API_KEY not set — skipping GEX wall fetch.")
         return None, None
-     try:
+    try:
         url = "https://lab.flashalpha.com/v1/exposure/gex/SPX"
         resp = requests.get(
             url,
